@@ -2,6 +2,14 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
+// function declaration
+void updateBranches(int seed);
+const int NUM_BRANCHES = 6;
+Sprite branches[NUM_BRANCHES];
+// player/branch left or right?
+enum class side { LEFT, RIGHT, NONE };
+side branchPositions[NUM_BRANCHES];
+
 int main()
 {
 	// Create a video mode object
@@ -105,6 +113,17 @@ int main()
 		textRect.height / 2.0f);
 	messageText.setPosition(1920 / 2.0f, 1080 / 2.0f);
 	scoreText.setPosition(20, 20);
+	// Prepare 6 branches
+	Texture textureBranch;
+	textureBranch.loadFromFile("graphics/branch.png");
+	// Set texture for each branch sprite
+	for (int i = 0; i < NUM_BRANCHES; i++)
+	{
+		branches[i].setTexture(textureBranch);
+		branches[i].setPosition(-2000, -2000);
+		// Set the sprite's origin to dead center
+		branches[i].setOrigin(220, 20);
+	}
 
 	while (window.isOpen())
 	{
@@ -255,6 +274,31 @@ int main()
 			std::stringstream ss;
 			ss << "Score = " << score;
 			scoreText.setString(ss.str());
+
+			// Update the branch sprites
+			for (int i = 0; i < NUM_BRANCHES; i++)
+			{
+				float height = i * 150;
+				if (branchPositions[i] == side::LEFT)
+				{
+					// Move sprite to the left side
+					branches[i].setPosition(610, height);
+					// Flip the sprite around the other way
+					branches[i].setRotation(180);
+				}
+				else if (branchPositions[i] == side::RIGHT)
+				{
+					// Move the sprite to the right
+					branches[i].setPosition(1330, height);
+					// Set rotation to normal
+					branches[i].setRotation(0);
+				}
+				else
+				{
+					// Hide the branch
+					branches[i].setPosition(3000, height);
+				}
+			}
 		}
 		/*
 		****************************************
@@ -269,6 +313,11 @@ int main()
 		window.draw(spriteCloud1);
 		window.draw(spriteCloud2);
 		window.draw(spriteCloud3);
+		// Draw the branches
+		for (int i = 0; i < NUM_BRANCHES; i++)
+		{
+			window.draw(branches[i]);
+		}
 		// Draw the trees
 		window.draw(spriteTree);
 		// Draw the bee
@@ -287,4 +336,29 @@ int main()
 	}
 
 	return 0;
+}
+
+// Function definition
+void updateBranches(int seed)
+{
+	// Move all branches down 1 place
+	for (int j = NUM_BRANCHES - 1; j > 0; j--)
+	{
+		branchPositions[j] = branchPositions[j - 1];
+	}
+	// Spawn a new branch at position 0
+	srand((int)time(0) + seed);
+	int r = (rand() % 5);
+	switch (r)
+	{
+	case 0:
+		branchPositions[0] = side::LEFT;
+		break;
+	case 1:
+		branchPositions[0] = side::RIGHT;
+		break;
+	default:
+		branchPositions[0] = side::NONE;
+		break;
+	}
 }
