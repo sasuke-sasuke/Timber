@@ -240,6 +240,8 @@ int main()
 					spriteAxe.getPosition().y);
 				spritePlayer.setPosition(580, 720);
 				// update branches
+				updateBranches(score);
+				// set log flyig right
 				spriteLog.setPosition(810, 720);
 				logSpeedX = 5000;
 				logActive = true;
