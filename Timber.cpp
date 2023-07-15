@@ -420,6 +420,28 @@ int main()
 					spriteLog.setPosition(810, 720);
 				}
 			}
+
+			// has log squished player?
+			if (branchPositions[5] == playerSide)
+			{
+				// death
+				paused = true;
+				acceptInput = false;
+
+				// draw the grave stone
+				spriteRIP.setPosition(525, 760);
+				// hide the player
+				spritePlayer.setPosition(2000, 660);
+				// Change the text of message
+				messageText.setString("SQUISHED!");
+				// Center on screen
+				FloatRect textRect = messageText.getLocalBounds();
+				messageText.setOrigin(textRect.left +
+					textRect.width / 2.0f,
+					textRect.top + textRect.height / 2.0f);
+				messageText.setPosition(1920 / 2.0f,
+					1080 / 2.0f);
+			}
 		}
 		/*
 		****************************************
